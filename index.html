@@ -13,6 +13,18 @@ textarea{display:block;width:100%;min-height:205px;resize:vertical;border:1px so
 </style></head><body><main class="shell"><nav class="nav" aria-label="Project navigation"><span class="brand">Tagalog Practice Logic</span><a href="https://github.com/LuckyGitHub777/tagalog-quiz-core-lab">Explore public source</a></nav>
 <header><span class="eyebrow">Recall · normalize · review</span><h1>Tagalog Practice Logic<span class="accent">.</span></h1><p>Explore the behavior of a tiny public quiz engine through question cards, recall strategies and transparent practice rules.</p><span class="pill">Live in your browser · No account · No uploads</span></header>
 <section aria-labelledby="path-title"><span class="eyebrow">Choose your path</span><h2 id="path-title">Explore the work</h2><div class="grid" id="modes" role="group" aria-label="Choose learning path"></div></section>
+<section aria-labelledby="quiz-title" style="border-top:1px solid var(--line);padding:30px 0 42px">
+<span class="eyebrow">Runs the released public JavaScript core</span><h2 id="quiz-title">Try the quiz engine</h2>
+<p style="color:var(--muted)">A four-item illustrative practice set demonstrates the actual released `makeQuiz` and `normalizeText` functions. It is not the separate Tagalog Academy course.</p>
+<div id="quiz-question" class="prompt" style="margin:18px 0"></div>
+<div id="quiz-choices" class="controls" role="group" aria-label="Choose an answer"></div>
+<p id="quiz-feedback" aria-live="polite" style="min-height:32px;color:var(--accent)"></p>
+<button class="action secondary" id="quiz-next" type="button">Next question</button>
+<hr style="margin:28px 0;border:0;border-top:1px solid var(--line)">
+<label for="quiz-normalize">Test the normalization function</label>
+<textarea id="quiz-normalize" rows="2" placeholder="Type a sample word or phrase…" style="min-height:70px"></textarea>
+<p>Normalized result: <output id="quiz-normalized"></output></p>
+</section>
 <section class="workspace" aria-labelledby="try-title"><div><span class="eyebrow">Guided experience</span><h2 id="try-title">Think through a real question.</h2><p class="prompt" id="prompt"></p><p class="guidance" id="guide"></p></div>
 <div><label for="notes"><strong>Your working note</strong> — browser-only, not uploaded</label><textarea id="notes" placeholder="Record your thoughts, assumptions, and next verification step…"></textarea><div class="controls"><button class="action" id="export" type="button">Save note (.md)</button><button class="action secondary" id="copy" type="button">Copy prompt</button><button class="action secondary" id="clear" type="button">Clear</button></div><p class="status" id="status" aria-live="polite"></p></div></section>
 <footer><strong>Tagalog Quiz Core Lab</strong> · Public educational browser companion. This experience illustrates the released material; it does not execute CLI software, access accounts, certify decisions, or replace the repository's source, tests and limitations. Your notes remain in this tab until exported. <a href="https://github.com/LuckyGitHub777/tagalog-quiz-core-lab/blob/main/README.md">Read scope and rights</a>.</footer></main>
@@ -33,4 +45,19 @@ document.getElementById("clear").addEventListener("click",()=>{notes.value="";st
 document.getElementById("copy").addEventListener("click",async()=>{try{await navigator.clipboard.writeText(steps[active][2]+"\n"+steps[active][3]);status.textContent="Prompt copied."}catch{status.textContent="Clipboard permission unavailable. Select and copy the visible text."}});
 document.getElementById("export").addEventListener("click",()=>{const blob=new Blob([draft()],{type:"text/markdown;charset=utf-8"});const a=document.createElement("a");const url=URL.createObjectURL(blob);a.href=url;a.download="tagalog-quiz-core-lab"+"-note.md";a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);status.textContent="Saved locally; no content was uploaded."});
 render();
+</script><script type="module">
+import { makeQuiz, normalizeText } from "./assets/js/core.js";
+const vocab=[
+{id:"demo1",tagalog:"Kumusta",english:"Hello",practice:true},
+{id:"demo2",tagalog:"Salamat",english:"Thank you",practice:true},
+{id:"demo3",tagalog:"Oo",english:"Yes",practice:true},
+{id:"demo4",tagalog:"Hindi",english:"No",practice:true}
+];
+const questions=makeQuiz(vocab,4,Math.random);
+let qi=0;
+const q=document.getElementById("quiz-question"),choices=document.getElementById("quiz-choices"),feedback=document.getElementById("quiz-feedback");
+function draw(){const item=questions[qi];q.textContent=(qi+1)+" / "+questions.length+" · "+item.prompt;choices.replaceChildren();feedback.textContent="";
+item.choices.forEach((choice,i)=>{const b=document.createElement("button");b.type="button";b.className="action secondary";b.textContent=choice;b.addEventListener("click",()=>{feedback.textContent=i===item.answer?"Correct · "+item.explanation:"Review · "+item.explanation;choices.querySelectorAll("button").forEach(button=>button.disabled=true)});choices.append(b)})}
+document.getElementById("quiz-next").addEventListener("click",()=>{qi=(qi+1)%questions.length;draw()});
+const field=document.getElementById("quiz-normalize"),result=document.getElementById("quiz-normalized");field.addEventListener("input",()=>result.textContent=normalizeText(field.value));draw();
 </script></body></html>
