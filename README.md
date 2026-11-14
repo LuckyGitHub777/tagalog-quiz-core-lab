@@ -8,4 +8,4 @@ Use Node.js 22 or a modern browser with ES modules. Run the small fictional-data
 
 Text normalization and quiz construction are software behavior, **not evidence of teaching effectiveness or linguistic accuracy**. Review actual teaching content with qualified language educators before publication or use.
 
-**License:** The source software retains the existing contributor MIT [LICENSE](LICENSE). This release does not grant rights in separately licensed lessons, curriculum, media, or printables. [MANIFEST.sha256](MANIFEST.sha256) records exact source checksums.
+**License:** The source software is licensed under the MIT [LICENSE](LICENSE), including its attribution requirements. This release does not grant rights in separately licensed lessons, curriculum, media, or printables. [MANIFEST.sha256](MANIFEST.sha256) records exact source checksums.
